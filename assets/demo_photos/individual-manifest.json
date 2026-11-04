@@ -1,0 +1,210 @@
+{
+  "version": 4,
+  "items": [
+    {
+      "key": "expanded-v2-wallet-1",
+      "file": "wallet-1-v3.jpg",
+      "title": "검정 엠보 가죽 지갑",
+      "color": "검정",
+      "generator": "built-in image_gen",
+      "generation_brief": "거친 가죽 무늬, 둥근 모서리와 작은 은색 장식",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "4bca538d1a7cad8a62814d1cfd8c28377823bf02935fa5c4f83cfaa5d93f7e57"
+    },
+    {
+      "key": "expanded-v2-wallet-2",
+      "file": "wallet-2-v3.jpg",
+      "title": "갈색 스트랩 반지갑",
+      "color": "갈색",
+      "generator": "built-in image_gen",
+      "generation_brief": "갈색 가죽, 가로 잠금 스트랩과 은색 타원 장식",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "6dce5604c5020b248d206c4bf388caaee928c86b5add48d550caffb615ea081e"
+    },
+    {
+      "key": "expanded-v2-wallet-3",
+      "file": "wallet-3-v3.jpg",
+      "title": "남색 스티치 반지갑",
+      "color": "파랑",
+      "generator": "built-in image_gen",
+      "generation_brief": "남색 가죽, 밝은 이중 스티치와 은색 사각 장식",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "a3e0669133cd20ebc80e722e00eab8a158a7fe410b5a494caee3578104c1fcac"
+    },
+    {
+      "key": "expanded-v2-wallet-4",
+      "file": "wallet-4-v3.jpg",
+      "title": "빨간 미니 지갑",
+      "color": "빨강",
+      "generator": "built-in image_gen",
+      "generation_brief": "작고 둥근 빨간 가죽 지갑, 은색 원형 장식",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "cd8f3a243ece9499dcbe34ac1119a8d7f3db7fc093e28e1627754b8c219a5e80"
+    },
+    {
+      "key": "expanded-v2-wallet-5",
+      "file": "wallet-5-v3.jpg",
+      "title": "베이지 접이식 지갑",
+      "color": "베이지",
+      "generator": "built-in image_gen",
+      "generation_brief": "크림 베이지색 가죽, 대각선 이음선과 은색 삼각 장식",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "8b91df96d63a3954058d8bddccfd5934c1673d05977e257a711b42f012faca95"
+    },
+    {
+      "key": "expanded-v2-earbuds-1",
+      "file": "earbuds-1-v3.jpg",
+      "title": "흰색 투명 케이스 이어폰",
+      "color": "흰색",
+      "generator": "built-in image_gen",
+      "generation_brief": "흰색 무선 이어폰, 투명 보호 케이스와 작은 노란 별 스티커",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "3608ae7f4f90252bed85e9254d2b21304311fff27782e5c1d3c1a6af5d0c51de"
+    },
+    {
+      "key": "expanded-v2-earbuds-2",
+      "file": "earbuds-2-v3.jpg",
+      "title": "검정 무선 이어폰 세트",
+      "color": "검정",
+      "generator": "built-in image_gen",
+      "generation_brief": "검정 이어폰과 충전 케이스, 투명 보호 커버와 노란 별 스티커",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "2a8d2a47d3bbee4c2798e96ed87c0e3a81540e0bfb691ccfe4e8e2ec5d6d8d75"
+    },
+    {
+      "key": "expanded-v2-earbuds-3",
+      "file": "earbuds-3-v3.jpg",
+      "title": "민트색 타원 이어폰",
+      "color": "민트",
+      "generator": "built-in image_gen",
+      "generation_brief": "민트색 타원형 충전 케이스와 이어폰, 투명 커버와 노란 별 스티커",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "bcfcc38884c2f2ef6c0e25cb23aa0c23a3535966653dbbe72ddc6ef374f6dacf"
+    },
+    {
+      "key": "expanded-v2-earbuds-4",
+      "file": "earbuds-4-v3.jpg",
+      "title": "보라색 충전 케이스 이어폰",
+      "color": "보라",
+      "generator": "built-in image_gen",
+      "generation_brief": "연보라색 이어폰과 둥근 사각 케이스, 투명 커버와 노란 별 스티커",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "2c385c46bfc556e12ae5463651a3ce0ce8ee883cbf2284f780ceb93c77df1f5e"
+    },
+    {
+      "key": "expanded-v2-earbuds-5",
+      "file": "earbuds-5-v3.jpg",
+      "title": "분홍 조약돌 이어폰",
+      "color": "분홍",
+      "generator": "built-in image_gen",
+      "generation_brief": "분홍색 둥근 충전 케이스와 이어폰, 투명 커버와 노란 별 스티커",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "802777a3a3599fcc7977d68f79aa8e616ad0492a6f3478543106c5ace31cb4a5"
+    },
+    {
+      "key": "expanded-v2-umbrella-1",
+      "file": "umbrella-1-v4.jpg",
+      "title": "초록 미니 접이식 우산",
+      "color": "초록",
+      "generator": "built-in image_gen",
+      "generation_brief": "짧게 접히는 초록 3단 우산, 검정 일자 버튼 손잡이와 손목 끈",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "44955ae62bb58bce777fb1197c5d7771678353384ba9f5c4e8b0f978cff6ae04",
+      "prompt": "Generate ONE square natural realistic smartphone product photograph for a campus lost-and-found demo: a FOREST GREEN compact three-fold travel umbrella, folded SHORT into a chunky cylindrical bundle, straight black rubber button handle, black wrist strap, NO curved handle, roughly 25 cm long. Place horizontally on light gray tabletop. Full single object entirely in frame with generous margins. Everyday believable materials, diffuse daylight, soft shadows. No people, text, logos, private markings, personal information, collage, watermark or unrelated objects. This umbrella must have the specific visibly distinct structure described, not just a color variant of a conventional folded long J-handle umbrella."
+    },
+    {
+      "key": "expanded-v2-umbrella-2",
+      "file": "umbrella-2-v4.jpg",
+      "title": "펼친 노란 장우산",
+      "color": "노랑",
+      "generator": "built-in image_gen",
+      "generation_brief": "넓게 펼친 노란 8각 우산, 곧은 축과 짧은 나무 일자 손잡이",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "40adbb7715ce7fe5611dc70fb8f687cef4b5423a459793faa4df83685caa33e0",
+      "prompt": "Generate ONE square natural realistic smartphone product photograph for a campus lost-and-found demo: a bright YELLOW full-size umbrella opened into a broad circular eight-panel dome, straight shaft and small straight wooden handle, viewed at a high oblique angle so round canopy and short visible handle both fit. Entire OPEN umbrella visible on a pale neutral studio floor. NO J handle. Full single object entirely in frame with generous margins. Everyday believable materials, diffuse daylight, soft shadows. No people, text, logos, private markings, personal information, collage, watermark or unrelated objects. This umbrella must have the specific visibly distinct structure described, not just a color variant of a conventional folded long J-handle umbrella."
+    },
+    {
+      "key": "expanded-v2-umbrella-3",
+      "file": "umbrella-3-v4.jpg",
+      "title": "와인색 자동 우산",
+      "color": "빨강",
+      "generator": "built-in image_gen",
+      "generation_brief": "가늘고 긴 와인색 우산, 은색 축과 곧은 검정 버튼 손잡이",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "eea588eb11a1b4a4f2316e09be91e48555646b4e76d9f0c30634c02b3a392840",
+      "prompt": "Generate ONE square natural realistic smartphone product photograph for a campus lost-and-found demo: a BURGUNDY RED slim automatic folding umbrella, closed with a black cylindrical straight handle and push button, silver telescoping shaft slightly extended, burgundy wrist strap; longer and much thinner than a compact travel bundle. Place diagonally on pale oak. Full single object entirely in frame with generous margins. Everyday believable materials, diffuse daylight, soft shadows. No people, text, logos, private markings, personal information, collage, watermark or unrelated objects. This umbrella must have the specific visibly distinct structure described, not just a color variant of a conventional folded long J-handle umbrella."
+    },
+    {
+      "key": "expanded-v2-umbrella-4",
+      "file": "umbrella-4-v4.jpg",
+      "title": "갈색 거꾸로 우산",
+      "color": "갈색",
+      "generator": "built-in image_gen",
+      "generation_brief": "거꾸로 접는 갈색 이중 천 우산, 검정 C자 손잡이",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "1fd746574f3a9df82b407f57baefa80d93523e74d8fe00e30ad035fb390370d7",
+      "prompt": "Generate ONE square natural realistic smartphone product photograph for a campus lost-and-found demo: a BROWN and dark taupe reverse-folding inverted umbrella, CLOSED in its distinct broad cone / tulip silhouette with fabric folded upward around the stem, prominent black C-shaped loop handle, double-layer fabric. Entire umbrella including C handle on warm ivory floor. Full single object entirely in frame with generous margins. Everyday believable materials, diffuse daylight, soft shadows. No people, text, logos, private markings, personal information, collage, watermark or unrelated objects. This umbrella must have the specific visibly distinct structure described, not just a color variant of a conventional folded long J-handle umbrella."
+    },
+    {
+      "key": "expanded-v2-umbrella-5",
+      "file": "umbrella-5-v4.jpg",
+      "title": "분홍 프릴 양산",
+      "color": "분홍",
+      "generator": "built-in image_gen",
+      "generation_brief": "펼친 연분홍 양산, 레이스 프릴 가장자리와 흰 곡선 손잡이",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "3b447ec61946aac601cab7d8878c13b1da58c97a3b16db2cf71d24de83131375",
+      "prompt": "Generate ONE square natural realistic smartphone product photograph for a campus lost-and-found demo: a PASTEL PINK small sun parasol, fully OPEN with a scalloped frilled edge, delicate lace-like trim and slim white straight shaft ending in a small white curved hook. Entire canopy, shaft and handle visible at oblique angle against a plain light gray floor. Clearly decorative parasol, not normal folded rain umbrella. Full single object entirely in frame with generous margins. Everyday believable materials, diffuse daylight, soft shadows. No people, text, logos, private markings, personal information, collage, watermark or unrelated objects. This umbrella must have the specific visibly distinct structure described, not just a color variant of a conventional folded long J-handle umbrella."
+    },
+    {
+      "key": "expanded-v2-hoodie-1",
+      "file": "hoodie-1-v3.jpg",
+      "title": "남색 지퍼 후드",
+      "color": "파랑",
+      "generator": "built-in image_gen",
+      "generation_brief": "남색 면 후드 집업, 은색 지퍼와 앞주머니 두 개",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "a686648f82874477b1337edb09c5431500550c828d4c571b79d8a118224c393d"
+    },
+    {
+      "key": "expanded-v2-hoodie-2",
+      "file": "hoodie-2-v3.jpg",
+      "title": "초록 면 후드 집업",
+      "color": "초록",
+      "generator": "built-in image_gen",
+      "generation_brief": "짙은 초록색 면 후드 집업, 앞주머니와 초록 끈",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "d67cf44f966812f577669de25ca91c19938fe96fd306d74bc57ddca404fe949f"
+    },
+    {
+      "key": "expanded-v2-hoodie-3",
+      "file": "hoodie-3-v3.jpg",
+      "title": "검정 앞주머니 집업",
+      "color": "검정",
+      "generator": "built-in image_gen",
+      "generation_brief": "검정 면 후드 집업, 은색 지퍼와 검정 끈",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "81e76480e3503ebbb051181be25953f9aea74f4b6a4b8ca5b16b8113288f5f0a"
+    },
+    {
+      "key": "expanded-v2-hoodie-4",
+      "file": "hoodie-4-v3.jpg",
+      "title": "크림 베이지 후드",
+      "color": "베이지",
+      "generator": "built-in image_gen",
+      "generation_brief": "밝은 크림 베이지색 면 후드 집업, 같은 색 끈과 앞주머니",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "3f98253c0e67f6eb6f7caa9b315e498a988b0f18c7bef493c44822d9ee990ddc"
+    },
+    {
+      "key": "expanded-v2-hoodie-5",
+      "file": "hoodie-5-v3.jpg",
+      "title": "벽돌색 긴팔 후드",
+      "color": "빨강",
+      "generator": "built-in image_gen",
+      "generation_brief": "벽돌빛 빨간 면 후드 집업, 어두운 지퍼와 앞주머니",
+      "constraints": "One natural smartphone photo per item, no private identifying details, no personal data; not a real found item.",
+      "sha256": "facb88eaf8efdb2019813c181924a15073b58961e67fad109b02ab51a00b0617"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "generator": "built-in image_gen",
+  "purpose": "임시 시연용 사진. 실제 습득 사진 및 정확도 평가용 데이터가 아님.",
+  "items": [
+    {
+      "key": "wallet",
+      "title": "검정 반지갑",
+      "file": "wallet.jpg",
+      "prompt": "Use case: product-mockup. Asset type: temporary demo photo for a Korean university lost-and-found web application. Create one realistic natural smartphone photograph of this single item: A closed small black bifold leather wallet, subtle leather grain and stitching, a tiny plain silver geometric emblem on the outer corner. No brand words. Three-quarter top view. Scene: plain warm light-gray tabletop, soft diffuse daylight, natural restrained shadows, object centered with generous margins so the entire item is visible in a square card crop. Realistic materials, everyday used-but-clean object, not a polished advertising poster. No people, no personal information, no text, no watermark, no collage, no additional objects.",
+      "question": "지갑 안쪽에는 어떤 모양의 표시가 있나요?"
+    },
+    {
+      "key": "earbuds",
+      "title": "흰색 무선 이어폰",
+      "file": "earbuds.jpg",
+      "prompt": "Use case: product-mockup. Asset type: temporary demo photo for a Korean university lost-and-found web application. Create one realistic natural smartphone photograph of this single item: White wireless earbuds and their white charging case inside a transparent protective shell, a small yellow star sticker on the clear case, lid slightly open, both earbuds visible. No brand logo. Scene: plain warm light-gray tabletop, soft diffuse daylight, natural restrained shadows, object centered with generous margins so the entire item is visible in a square card crop. Realistic materials, everyday used-but-clean object, not a polished advertising poster. No people, no personal information, no text, no watermark, no collage, no additional objects.",
+      "question": "이어폰 케이스 안쪽에는 어떤 모양의 표시가 있나요?"
+    },
+    {
+      "key": "umbrella",
+      "title": "파란 장우산",
+      "file": "umbrella.jpg",
+      "prompt": "Use case: product-mockup. Asset type: temporary demo photo for a Korean university lost-and-found web application. Create one realistic natural smartphone photograph of this single item: A single closed long navy blue umbrella with a curved natural wooden J-shaped handle and wooden shaft detail. Entire umbrella including tip fits in frame diagonally from lower left to upper right. Blue fabric neatly folded and fastened. Scene: plain warm light-gray tabletop, soft diffuse daylight, natural restrained shadows, object centered with generous margins so the entire item is visible in a square card crop. Realistic materials, everyday used-but-clean object, not a polished advertising poster. No people, no personal information, no text, no watermark, no collage, no additional objects.",
+      "question": "우산 손잡이 안쪽에는 어떤 모양의 표시가 있나요?"
+    },
+    {
+      "key": "hoodie",
+      "title": "회색 후드 집업",
+      "file": "hoodie.jpg",
+      "prompt": "Use case: product-mockup. Asset type: temporary demo photo for a Korean university lost-and-found web application. Create one realistic natural smartphone photograph of this single item: A light heather gray cotton zip-up hoodie with hood, full front zipper and two front kangaroo-style pockets, neatly laid flat with sleeves folded inward. No person, no branding. Scene: plain warm light-gray tabletop, soft diffuse daylight, natural restrained shadows, object centered with generous margins so the entire item is visible in a square card crop. Realistic materials, everyday used-but-clean object, not a polished advertising poster. No people, no personal information, no text, no watermark, no collage, no additional objects.",
+      "question": "옷 안쪽 라벨에는 어떤 모양의 표시가 있나요?"
+    }
+  ]
+}

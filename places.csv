@@ -1,0 +1,10 @@
+code,name,lat,lon,osm_way,coordinate_basis,source
+Y01,경암의학관,35.3263761,129.0030031,504120034,building-centroid,https://www.openstreetmap.org/way/504120034
+Y02,치의학전문대학원,35.3252538,129.003831,504120038,building-centroid,https://www.openstreetmap.org/way/504120038
+Y03,한의학전문대학원,35.3258568,129.0048026,504120037,building-centroid,https://www.openstreetmap.org/way/504120037
+Y04,간호대학,35.3263336,129.004017,504120033,building-centroid,https://www.openstreetmap.org/way/504120033
+Y05,행림관,35.3225208,129.0055382,504124268,building-centroid,https://www.openstreetmap.org/way/504124268
+Y09,나래관,35.3272491,129.0037203,504120036,building-centroid,https://www.openstreetmap.org/way/504120036
+Y10,의생명과학도서관,35.326887,129.003913,504120035,building-centroid,https://www.openstreetmap.org/way/504120035
+Y16,지행관,35.3219943,129.0064336,891404213,building-centroid,https://www.openstreetmap.org/way/891404213
+Y17,경암공학관,35.3227682,129.0071281,1091787513,site-centroid,https://www.openstreetmap.org/way/1091787513

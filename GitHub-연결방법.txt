@@ -1,0 +1,46 @@
+GitHub와 Streamlit으로 데모 홈페이지 열기
+
+GitHub는 코드를 보관하는 곳이고, Streamlit Community Cloud는 앱을 실행하는 곳입니다.
+이 프로그램은 Python을 사용하므로 GitHub Pages만으로 실행할 수 없습니다.
+
+1. GitHub 저장소 만들기
+https://github.com/new 에서 저장소 이름을 pnu-yangsan-lost-found 등으로 정하세요.
+시연용으로 공개하려면 Public을 선택하고 Create repository를 누르세요.
+
+2. 전용 파일 올리기
+campus-lost-github-v0.15.zip을 ‘모두 압축 풀기’로 푸세요.
+campus-lost-github 폴더 안의 파일과 폴더를 GitHub 저장소에 올리세요.
+GitHub의 Add file → Upload files를 이용하고, 마지막에 Commit changes를 누르세요.
+ZIP 자체를 올리는 것이 아닙니다! cloud_app.py가 저장소 맨 위에 보여야 합니다.
+.streamlit, assets, landing, models 폴더도 빠뜨리지 마세요.
+로컬용 ZIP에는 큰 AI 모델과 다른 파일이 있으므로 GitHub 전용 ZIP을 사용하세요.
+개인 data 폴더, .venv 폴더, 확인 코드나 비밀 파일은 올리지 마세요.
+
+3. 실행 서비스 연결하기
+https://share.streamlit.io 에 접속해서 GitHub 계정으로 로그인하세요.
+GitHub 연결 권한 요청이 나오면 대상 저장소와 요청 내용을 확인하세요.
+Create app → GitHub에서 배포하는 메뉴를 선택하세요.
+
+Repository: 1번에서 만든 저장소
+Branch: main (다른 이름으로 만들었다면 그 이름)
+Main file path: cloud_app.py
+Advanced settings → Python version: 3.12
+
+Deploy를 누르고 준비가 끝날 때까지 기다리세요.
+처음에는 필요한 도구와 AI 모델을 내려받으므로 몇 분 걸릴 수 있습니다.
+완료되면 https://이름.streamlit.app 형태의 주소로 접속할 수 있습니다.
+
+4. 다음에 수정했을 때
+바뀐 코드를 같은 GitHub 저장소의 같은 브랜치에 올리고 Commit changes를 누르세요.
+연결된 앱이 자동으로 갱신됩니다. 보통 같은 주소를 계속 사용합니다.
+내 컴퓨터에서 파일만 고치고 GitHub에 올리지 않으면 홈페이지는 바뀌지 않습니다.
+
+실제 계정 연결과 Deploy는 아직 완료하지 않았습니다.
+GitHub 전용판은 큰 AI 모델을 첫 실행에 내려받고 무결성을 검사합니다.
+예시 24건은 자동으로 준비됩니다. API 키는 필요 없습니다.
+현재 DB는 시연 서버의 파일에 저장합니다. 서버가 초기화되면 기록이 사라질 수 있습니다.
+기록을 계속 보관하는 실제 서비스에는 별도 DB 연결이 필요합니다.
+
+공식 설명
+https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy
+https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/edit-your-app

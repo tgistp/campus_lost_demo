@@ -1,0 +1,97 @@
+{
+  "retrieved": "2026-11-03",
+  "coordinate_reference_system": "WGS84 EPSG:4326",
+  "coordinate_method": "Polygon area centroids from OpenStreetMap ways; not entrances or survey measurements.",
+  "official_names": "https://www.pusan.ac.kr/kor/CMS/Contents/Contents.do?mCode=MN213",
+  "narae_crosscheck": "https://imsi-sce.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1728&mCode=MN050&mgr_seq=11&mode=view&page=2",
+  "notes": {
+    "Y01": "OSM legacy name 의학전문대학원; current official name 경암의학관.",
+    "Y09": "OSM 평생교육원 matched to official 나래관; school notice locates the institute in 나래관.",
+    "Y17": "OSM construction/site polygon centre. Site-level accuracy, not a surveyed building entrance."
+  },
+  "attribution": "© OpenStreetMap contributors, ODbL 1.0",
+  "license": "https://www.openstreetmap.org/copyright",
+  "places": [
+    {
+      "code": "Y01",
+      "name": "경암의학관",
+      "lat": 35.3263761,
+      "lon": 129.0030031,
+      "osm_way": "504120034",
+      "coordinate_basis": "building-centroid",
+      "source": "https://www.openstreetmap.org/way/504120034"
+    },
+    {
+      "code": "Y02",
+      "name": "치의학전문대학원",
+      "lat": 35.3252538,
+      "lon": 129.003831,
+      "osm_way": "504120038",
+      "coordinate_basis": "building-centroid",
+      "source": "https://www.openstreetmap.org/way/504120038"
+    },
+    {
+      "code": "Y03",
+      "name": "한의학전문대학원",
+      "lat": 35.3258568,
+      "lon": 129.0048026,
+      "osm_way": "504120037",
+      "coordinate_basis": "building-centroid",
+      "source": "https://www.openstreetmap.org/way/504120037"
+    },
+    {
+      "code": "Y04",
+      "name": "간호대학",
+      "lat": 35.3263336,
+      "lon": 129.004017,
+      "osm_way": "504120033",
+      "coordinate_basis": "building-centroid",
+      "source": "https://www.openstreetmap.org/way/504120033"
+    },
+    {
+      "code": "Y05",
+      "name": "행림관",
+      "lat": 35.3225208,
+      "lon": 129.0055382,
+      "osm_way": "504124268",
+      "coordinate_basis": "building-centroid",
+      "source": "https://www.openstreetmap.org/way/504124268"
+    },
+    {
+      "code": "Y09",
+      "name": "나래관",
+      "lat": 35.3272491,
+      "lon": 129.0037203,
+      "osm_way": "504120036",
+      "coordinate_basis": "building-centroid",
+      "source": "https://www.openstreetmap.org/way/504120036"
+    },
+    {
+      "code": "Y10",
+      "name": "의생명과학도서관",
+      "lat": 35.326887,
+      "lon": 129.003913,
+      "osm_way": "504120035",
+      "coordinate_basis": "building-centroid",
+      "source": "https://www.openstreetmap.org/way/504120035"
+    },
+    {
+      "code": "Y16",
+      "name": "지행관",
+      "lat": 35.3219943,
+      "lon": 129.0064336,
+      "osm_way": "891404213",
+      "coordinate_basis": "building-centroid",
+      "source": "https://www.openstreetmap.org/way/891404213"
+    },
+    {
+      "code": "Y17",
+      "name": "경암공학관",
+      "lat": 35.3227682,
+      "lon": 129.0071281,
+      "osm_way": "1091787513",
+      "coordinate_basis": "site-centroid",
+      "source": "https://www.openstreetmap.org/way/1091787513"
+    }
+  ]
+}
