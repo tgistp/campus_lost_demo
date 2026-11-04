@@ -298,6 +298,117 @@ class SecurityTests(unittest.TestCase):
         self.assertEqual(row.status,"확인 대기")
         self.assertTrue(__import__("pandas").isna(row.storage))
 
+    def test_physical_states_and_precise_numbers_reject_but_aliases_pass(self):
+        from semantic_ai import judge_answer
+        negatives=[
+            ("지퍼가 닫혀 있어요","지퍼가 열려 있어요","지퍼 상태는 어떤가요?"),
+            ("닫힌 지퍼","열린 지퍼","지퍼 상태는?"),
+            ("1.7","17","적힌 숫자는 무엇인가요?"),
+            ("-17","17","적힌 번호는?"),
+            ("열쇠 열한 개","열쇠 한 개","안에 무엇이 있나요?"),
+            ("열쇠스물한개","열쇠한개","안에 무엇이 있나요?"),
+            ("사진 12장","사진 2장","안쪽 특징은?"),
+            ("이장","2장","안쪽에 적힌 이름은?"),
+        ]
+        for expected,answer,q in negatives:
+            with self.subTest(expected=expected,answer=answer):
+                self.assertFalse(judge_answer(expected,answer,q)["passed"])
+                self.assertFalse(judge_answer(answer,expected,q)["passed"])
+        for expected,answer,q in (
+            ("하늘","하늘사진","어떤 사진이 있나요?"),
+            ("하늘 사진","하늘 사진이에요","안쪽 특징은?"),
+            ("진한 빨간색","빨강","무슨 색인가요?"),
+            ("닫혀 있어요","닫힌 상태입니다","지퍼 상태는?"),
+            ("열려 있어요","열린 상태입니다","지퍼 상태는?"),
+            ("1.7","1.70","적힌 숫자는?"),
+            ("열한 개","11","몇 개인가요?"),
+            ("열쇠 열한 개","열쇠 11개","안에 무엇이 있나요?"),
+            ("열쇠스물한개","열쇠21개","안에 무엇이 있나요?"),
+            ("열쇠 십일 개","열쇠 11개","안에 무엇이 있나요?"),
+        ):
+            with self.subTest(expected=expected,answer=answer):
+                self.assertTrue(judge_answer(expected,answer,q)["passed"])
+        for expected,answer,q in negatives[:3]:
+            iid=self.item(private_hint=expected,verification_question=q)
+            core.request_pickup(iid,self.other,answer)
+        rows=core.pickup_requests(self.other,False)
+        self.assertTrue(rows.status.eq("확인 대기").all())
+        self.assertTrue(rows.storage.isna().all())
+
+    def test_inference_does_not_block_another_users_registration(self):
+        from unittest.mock import patch
+        iid=self.item(verification_question="안쪽 특징은?")
+        def judge(*args):
+            # This write would time out if inference still held SQLite's writer lock.
+            self.item(title="다른 사용자 등록")
+            return dict(passed=True,score=1.,engine="review-test",reason="test")
+        with patch.object(core,"judge_answer",side_effect=judge):
+            core.request_pickup(iid,self.other,"별 모양")
+        self.assertEqual(len(core.read("items")),2)
+        self.assertEqual(core.pickup_requests(self.other,False).iloc[0].status,"소유 확인 완료")
+
+    def test_inference_rechecks_item_and_pending_approval_before_saving(self):
+        from unittest.mock import patch
+        iid=self.item(verification_question="안쪽 특징은?")
+        def change_item(*args):
+            with core.connect() as con:
+                con.execute("UPDATE items SET private_hint='다른 정답' WHERE id=?",(iid,))
+            return dict(passed=True,score=1.,engine="test",reason="test")
+        with patch.object(core,"judge_answer",side_effect=change_item):
+            with self.assertRaises(sec.SecurityError):core.request_pickup(iid,self.other,"별")
+        self.assertTrue(core.pickup_requests(self.other,False).empty)
+        # An owner's manual decision made during inference must not be overwritten.
+        with patch.object(core,"judge_answer",return_value=dict(passed=False,score=0.,engine="test",reason="test")):
+            rid,otp=core.request_pickup(iid,self.other,"이전 답변")
+        def approve_pending(*args):
+            core.approve_ownership(rid,self.owner)
+            return dict(passed=False,score=0.,engine="test",reason="test")
+        with patch.object(core,"judge_answer",side_effect=approve_pending):
+            with self.assertRaises(sec.SecurityError):core.request_pickup(iid,self.other,"새 답변")
+        current=core.pickup_requests(self.other,False).iloc[0]
+        self.assertEqual(current.status,"소유 확인 완료")
+        self.assertEqual(current.evidence,"이전 답변")
+        core.complete_pickup(rid,self.owner,otp,True)
+
+    def test_concurrent_proofs_save_only_one_active_approval(self):
+        import threading
+        from unittest.mock import patch
+        iid=self.item(verification_question="안쪽 특징은?")
+        barrier=threading.Barrier(2,timeout=4)
+        successes=[];failures=[]
+        def judge(*args):
+            barrier.wait()
+            return dict(passed=True,score=1.,engine="test",reason="test")
+        def request():
+            try:successes.append(core.request_pickup(iid,self.other,"별"))
+            except Exception as exc:failures.append(exc)
+        with patch.object(core,"judge_answer",side_effect=judge):
+            threads=[threading.Thread(target=request) for _ in range(2)]
+            for thread in threads:thread.start()
+            for thread in threads:thread.join(8)
+        self.assertFalse(any(t.is_alive() for t in threads))
+        self.assertEqual(len(successes),1)
+        self.assertEqual(len(failures),1)
+        self.assertIsInstance(failures[0],sec.SecurityError)
+        self.assertEqual(len(core.pickup_requests(self.other,False)),1)
+
+    def test_attempts_survive_inference_failure_and_session_is_rechecked(self):
+        from unittest.mock import patch
+        iid=self.item(verification_question="안쪽 특징은?")
+        with patch.object(core,"judge_answer",side_effect=RuntimeError("test inference failure")):
+            for _ in range(5):
+                with self.assertRaises(RuntimeError):core.request_pickup(iid,self.other,"별")
+            with self.assertRaises(sec.SecurityError):core.request_pickup(iid,self.other,"별")
+        self.assertTrue(core.pickup_requests(self.other,False).empty)
+        other_item=self.item(verification_question="안쪽 특징은?")
+        def expire(*args):
+            with core.connect() as con:
+                con.execute("UPDATE owner_sessions SET expires_at=? WHERE token_hash=?",
+                            ((core.now()-timedelta(seconds=1)).isoformat(),sec.digest(self.other)))
+            return dict(passed=True,score=1.,engine="test",reason="test")
+        with patch.object(core,"judge_answer",side_effect=expire):
+            with self.assertRaises(sec.SecurityError):core.request_pickup(other_item,self.other,"별")
+
     def test_otp_renewal_recovers_from_lockout_and_invalidates_old_code(self):
         iid=self.item(verification_question="안쪽에는 어떤 표시가 있나요?")
         rid,old=core.request_pickup(iid,self.other,"내부 별 모양")

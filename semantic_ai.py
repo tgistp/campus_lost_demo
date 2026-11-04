@@ -71,12 +71,11 @@ def judge_answer(expected,supplied,question=""):
     got,got_rest=facts(supplied,question)
     for answer in alternatives:
         want,want_rest=facts(answer,question)
-        if contradicts(answer,supplied):continue
+        if contradicts(answer,supplied,question):continue
         if any(required and got[g] and required!=got[g] for g,required in want.items()):continue
         if any(len(got[g])>1 and len(want[g])<=1 for g in want):continue
         # Similar spellings must not authenticate a different number or person.
         if IDENTITY.search(question) and want_rest!=got_rest:continue
-        if re.findall(r"\d+",want_rest)!=re.findall(r"\d+",got_rest):continue
         eligible.append(answer)
     if not eligible:
         result["reason"]="답변에 서로 다른 특징이나 부정 표현이 있어 확인되지 않았습니다.";return result

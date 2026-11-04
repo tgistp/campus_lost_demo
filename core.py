@@ -17,6 +17,7 @@ DATA = Path(os.environ.get("CAMPUS_DATA_DIR", str(BASE / "data")))
 CATEGORIES = ["지갑", "전자기기", "카드·학생증", "가방", "의류", "우산", "기타"]
 COLORS = ["검정", "흰색", "회색", "파랑", "빨강", "초록", "갈색", "노랑", "분홍", "보라", "베이지", "민트", "기타"]
 KST = timezone(timedelta(hours=9))
+ANSWER_POLICY = "typed-facts-v0.16"
 
 
 def now():
@@ -111,14 +112,14 @@ def init_db():
         for field,kind in {"verification_score":"REAL","verification_engine":"TEXT","verification_reason":"TEXT"}.items():
             if field not in request_columns:con.execute(f"ALTER TABLE pickup_requests ADD COLUMN {field} {kind}")
         policy=con.execute("SELECT value FROM app_metadata WHERE key='answer_policy'").fetchone()
-        if not policy or policy[0]!="state-checks-v0.12":
+        if not policy or policy[0]!=ANSWER_POLICY:
             # Previously exposed places cannot be recalled, but stale automatic
             # approvals must not authorize new handovers under the old policy.
             con.execute("""UPDATE pickup_requests SET status='확인 대기',verification_score=NULL,
                 verification_reason='인증 기준이 업데이트되었습니다. 답변을 다시 확인해 주세요.'
                 WHERE status='소유 확인 완료' AND verification_engine='local-minilm-onnx' AND expires_at>?""",
                 (now().isoformat(),))
-            con.execute("INSERT OR REPLACE INTO app_metadata VALUES ('answer_policy','state-checks-v0.12')")
+            con.execute("INSERT OR REPLACE INTO app_metadata VALUES ('answer_policy',?)",(ANSWER_POLICY,))
         con.commit()
         version=hashlib.sha256((BASE/"places.csv").read_bytes()).hexdigest()
         previous=con.execute("SELECT value FROM app_metadata WHERE key='place_coordinates'").fetchone()
@@ -296,6 +297,21 @@ def acknowledge_pickup(item_id, token):
             (now().isoformat(), item_id, owner_hash)).rowcount > 0
 
 
+def _pickup_item(con,item_id,requester):
+    row=con.execute("SELECT i.status,r.code_hash,i.private_hint,i.verification_question FROM items i JOIN registrations r ON r.item_id=i.id WHERE i.id=?",(item_id,)).fetchone()
+    if not row or row[0]=="반환 완료":
+        raise sec.SecurityError("수령 인증을 접수할 수 없습니다. 등록자 연결과 처리 상태를 확인해 주세요.")
+    if row[1]==requester:
+        raise sec.SecurityError("등록자와 수령자는 서로 다른 확인 코드로 연결해야 합니다.")
+    return row
+
+
+def _active_pickup(con,item_id,requester):
+    return con.execute("""SELECT id,status,otp_hash FROM pickup_requests WHERE item_id=? AND requester_hash=?
+        AND status IN ('확인 대기','소유 확인 완료') AND expires_at>? ORDER BY id DESC LIMIT 1""",
+        (item_id,requester,now().isoformat())).fetchone()
+
+
 def request_pickup(item_id, token, evidence, note=""):
     item_id = sec.positive_id(item_id)
     evidence = sec.clean(evidence, "확인 질문의 답변", 1000, 1)
@@ -303,33 +319,38 @@ def request_pickup(item_id, token, evidence, note=""):
     with connect() as con:
         con.execute("BEGIN IMMEDIATE")
         requester = require_session(con, token)
-        row = con.execute("SELECT i.status,r.code_hash,i.private_hint,i.verification_question FROM items i JOIN registrations r ON r.item_id=i.id WHERE i.id=?", (item_id,)).fetchone()
-        if not row or row[0] == "반환 완료":
-            raise sec.SecurityError("수령 인증을 접수할 수 없습니다. 등록자 연결과 처리 상태를 확인해 주세요.")
-        if row[1] == requester:
-            raise sec.SecurityError("등록자와 수령자는 서로 다른 확인 코드로 연결해야 합니다.")
-        sec.limited(con, now(), "request:" + requester, 10, 3600)
-        existing = con.execute("SELECT id,status FROM pickup_requests WHERE item_id=? AND requester_hash=? AND status IN ('확인 대기','소유 확인 완료') AND expires_at>? ORDER BY id DESC LIMIT 1",
-                               (item_id, requester, now().isoformat())).fetchone()
+        row = _pickup_item(con,item_id,requester)
+        existing = _active_pickup(con,item_id,requester)
         if existing and existing[1] == "소유 확인 완료":
             raise sec.SecurityError("이미 본인 확인이 완료됐습니다. 내 수령 인증에서 보관 장소를 확인해 주세요.")
+        # Reserve attempts in a short committed transaction, before slow inference.
+        sec.limited(con, now(), "request:" + requester, 10, 3600)
         sec.limited(con, now(), f"answer:{item_id}:{requester}", 5, 3600)
-        otp = f"{secrets.randbelow(100_000_000):08d}"
-        salt = secrets.token_hex(16)
-        judgement={"passed":False,"score":None,"engine":"manual","reason":"등록자가 확인할 질문·정답을 설정하지 않았습니다."}
-        if row[3] and row[2]:
-            try:judgement=judge_answer(row[2],evidence,row[3])
-            except ModelUnavailable:
-                judgement.update(engine="unavailable",reason="로컬 AI 모델을 불러오지 못했습니다. 모델 파일과 라이브러리를 확인해 주세요.")
+
+    # No database connection or write lock remains held while the model runs.
+    judgement={"passed":False,"score":None,"engine":"manual","reason":"등록자가 확인할 질문·정답을 설정하지 않았습니다."}
+    if row[3] and row[2]:
+        try:judgement=judge_answer(row[2],evidence,row[3])
+        except ModelUnavailable:
+            judgement.update(engine="unavailable",reason="로컬 AI 모델을 불러오지 못했습니다. 모델 파일과 라이브러리를 확인해 주세요.")
+    otp = f"{secrets.randbelow(100_000_000):08d}"
+    salt = secrets.token_hex(16)
+    hashed_otp=sec.otp_digest(otp,salt)
+    with connect() as con:
+        con.execute("BEGIN IMMEDIATE")
+        if require_session(con,token)!=requester or _pickup_item(con,item_id,requester)!=row:
+            raise sec.SecurityError("물건 정보나 연결이 변경되었습니다. 다시 인증해 주세요.")
+        if _active_pickup(con,item_id,requester)!=existing:
+            raise sec.SecurityError("다른 요청에서 인증 상태가 변경되었습니다. 최신 수령 내역을 확인해 주세요.")
         status = "소유 확인 완료" if judgement["passed"] else "확인 대기"
         if existing:
             rid = existing[0]
             con.execute("""UPDATE pickup_requests SET evidence=?,note=?,otp_hash=?,otp_salt=?,expires_at=?,status=? WHERE id=?""",
-                (evidence, note, sec.otp_digest(otp, salt), salt, (now() + timedelta(hours=1)).isoformat(), status, rid))
+                (evidence, note, hashed_otp, salt, (now() + timedelta(hours=1)).isoformat(), status, rid))
         else:
             rid = con.execute("""INSERT INTO pickup_requests
                 (item_id,requester_hash,evidence,note,otp_hash,otp_salt,expires_at,created_at,status) VALUES (?,?,?,?,?,?,?,?,?)""",
-                (item_id, requester, evidence, note, sec.otp_digest(otp, salt), salt,
+                (item_id, requester, evidence, note, hashed_otp, salt,
                  (now() + timedelta(hours=1)).isoformat(), now().isoformat(), status)).lastrowid
         sec.event(con, now(), "pickup_requested", item_id)
         if status == "소유 확인 완료":

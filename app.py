@@ -14,7 +14,7 @@ import core
 import security as sec
 from uploads import save_image
 
-st.set_page_config(page_title="양산캠퍼스 분실물", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="PNU:LINK", layout="wide", initial_sidebar_state="collapsed")
 try:
     core.init_db()
 except Exception:
@@ -39,6 +39,7 @@ button[kind='primary']:hover{background:#3ee67b!important}
 [class*='st-key-item_']{border:1px solid color-mix(in srgb,currentColor 13%,transparent);background:color-mix(in srgb,currentColor 3%,transparent);padding:1rem;border-radius:7px}
 .photo-empty{height:96px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,currentColor 7%,transparent);font-size:.8rem;color:inherit}
 .item-status{font-size:.75rem;color:#08783b;background:#ddf7e8;padding:3px 7px;border-radius:3px}
+.app-brand{font-family:Arial,'Malgun Gothic',sans-serif;font-weight:800;letter-spacing:-.045em!important}.app-brand span{color:#1ed760}
 </style>""", unsafe_allow_html=True)
 
 if st.session_state["page"] == "처음":
@@ -140,8 +141,8 @@ def clear_demo_roles():
             del st.session_state[key]
 
 
-st.caption("부산대학교 · 양산캠퍼스")
-st.title("캠퍼스 분실물")
+st.markdown('<h1 class="app-brand">PNU<span>:</span>LINK</h1>',unsafe_allow_html=True)
+st.caption("부산대학교 양산캠퍼스 분실물")
 page = st.radio("메뉴", PAGES, format_func=LABELS.get, horizontal=True, label_visibility="collapsed", key="page")
 if page == "처음":
     st.rerun()

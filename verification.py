@@ -5,6 +5,7 @@ understanding. Conflicting facts, negation and uncertain answers stay pending.
 """
 import re
 import unicodedata
+from decimal import Decimal
 
 GROUPS = {
  "location": {
@@ -43,7 +44,61 @@ MODIFIERS=re.compile(r"아주|매우|약간|조금|진한|짙은|어두운|연�
 FILLERS=re.compile(r"데모확인특징|그려져있습니다|그려져있어요|그려져있어|그려져있음|적혀있습니다|적혀있어요|적혀있음|쓰여있어요|써있어요|써있음|붙어있어요|붙어있습니다|붙어있음|붙어있는|달려있어요|달려있습니다|달려있음|부착되어|부착된|붙어|붙인|달려|있습니다|있어요|있어|있음|입니다|이에요|이예요|예요|에요|모양|문양|무늬|표시|그림|마크|특징|색깔|색상|재질|소재|같아요|적혀|그려진|그려져|쓰여진|써진|해요")
 OBJECTS=["지갑","케이스","이어폰","우산","손잡이","라벨","태그","후드","지퍼","카드","가방","학생증","텀블러","노트북","충전기","파우치","옷"]
 IDENTITY=re.compile(r"이름|성명|이니셜|문구|글자|영문|알파벳|번호|숫자|시리얼")
-NUMERIC=re.compile(r"숫자|번호|몇번|몇개")
+NUMERIC=re.compile(r"숫자|번호|몇\s*(?:번|개|장|쌍|자루|켤레)")
+
+NATIVE_ONES={"한":1,"하나":1,"두":2,"둘":2,"세":3,"셋":3,"네":4,"넷":4,
+             "다섯":5,"여섯":6,"일곱":7,"여덟":8,"아홉":9}
+NATIVE_TENS={"열":10,"스물":20,"스무":20,"서른":30,"마흔":40,"쉰":50,
+             "예순":60,"일흔":70,"여든":80,"아흔":90}
+_native_words=set(NATIVE_ONES)|set(NATIVE_TENS)|{a+b for a in NATIVE_TENS for b in NATIVE_ONES}
+_native_pattern="|".join(re.escape(word) for word in sorted(_native_words,key=len,reverse=True))
+_number_pattern=r"[+-]?(?:\d+(?:\.\d+)?|\.\d+)"
+_count_pattern=re.compile(r"("+_number_pattern+"|"+_native_pattern+r"|[영공일이삼사오육칠팔구십백천]+)\s*(켤레|자루|개|장|쌍|번)")
+
+
+def numeric_text(text):
+    value=unicodedata.normalize("NFKC",str(text)).casefold()
+    # Thousands separators may be removed; decimal points and signs must survive.
+    return re.sub(r"(?<!\d)\d{1,3}(?:,\d{3})+(?!\d)",lambda m:m[0].replace(",",""),value)
+
+
+def number_value(text):
+    if re.fullmatch(_number_pattern,text):return Decimal(text)
+    value=korean_number(text)
+    return Decimal(value) if value.isdigit() else None
+
+
+def literal_number(text,question):
+    if not NUMERIC.search(question):return None
+    value=re.sub(r"\s+","",numeric_text(text)).rstrip(".!?")
+    value=re.sub(r"^(?:숫자|번호)(?:은|는|이|가)?","",value)
+    value=FILLERS.sub("",value)
+    value=re.sub(r"(?:이라고|라고|이요|요)$","",value)
+    unit=re.search(r"몇\s*(켤레|자루|개|장|쌍|번)",question)
+    allowed=unit[1] if unit else "번"
+    value=re.sub(re.escape(allowed)+r"$","",value)
+    return number_value(value)
+
+
+def number_signature(text,question=""):
+    literal=literal_number(text,question)
+    if literal is not None:return ("literal",literal)
+    value=numeric_text(text)
+    counts=[]
+    def extract(match):
+        number=number_value(match[1])
+        if number is not None:counts.append((match[2],number))
+        return " "*len(match[0])
+    remaining=_count_pattern.sub(extract,value)
+    plain=tuple(Decimal(m[0]) for m in re.finditer(_number_pattern,remaining))
+    return (tuple(counts),plain)
+
+
+def normalized_counts(text):
+    def replace(match):
+        value=number_value(match[1])
+        return format(value.normalize(),"f")+match[2] if value is not None else match[0]
+    return _count_pattern.sub(replace,numeric_text(text))
 
 
 def state_facts(text):
@@ -55,7 +110,7 @@ def state_facts(text):
     # Prefer the negative form over the affirmative substring it contains.
     for key,negative,positive in (
         ("closure",r"(?:안|못)닫|닫\w{0,3}지(?:않|못)|닫을수없",r"닫"),
-        ("opening",r"(?:안|못)열|열\w{0,3}지(?:않|못)|열수없",r"열려|열리|열어|열림"),
+        ("opening",r"(?:안|못)열|열\w{0,3}지(?:않|못)|열수없",r"열려|열리|열린|열어|열림|열었"),
         ("attachment",r"떨어|떼어|떼었|떼짐|떼진|탈락|분리|(?:안|못)붙|붙\w{0,3}지않|(?:안|못)달려|달려있지않",
                       r"붙|달려|부착|부착됨"),
         ("function",r"정상(?:이)?아니|정상아님|정상이아님|고장|망가|파손|부서|불량|작동(?:이)?안|작동하지않|(?:안|못)작동|충전(?:이)?안|충전되지않",
@@ -71,13 +126,17 @@ def state_facts(text):
     for key in ("closure","opening"):
         if key in states:
             states.setdefault("function",set()).update(states[key])
+    # A physical state is a separate fact from whether the mechanism works.
+    if states.get("closure")=={1}:put("position",-1)
+    if states.get("opening")=={1}:put("position",1)
     return states
 
 
-def contradicts(expected,supplied):
+def contradicts(expected,supplied,question=""):
     want,got=state_facts(expected),state_facts(supplied)
     shared=want.keys() & got.keys()
     if any(want[key]!=got[key] for key in shared):return True
+    if any(len(states.get("position",set()))>1 for states in (want,got)):return True
     # These negations are already represented by their predicate's state above.
     # Keep negation elsewhere (e.g. a missing mark) even when another state agrees.
     def has_negation(text):
@@ -87,14 +146,7 @@ def contradicts(expected,supplied):
         value=re.sub(r"(?:안|못)(?:닫|열|되|돼|붙|달려|작동|충전|떨어)", "", value)
         return bool(NEGATION.search(value) or re.search(r"(?:안|못)(?:보이|잠|움직|켜|꺼)",value))
     if has_negation(expected)!=has_negation(supplied):return True
-    def quantities(text):
-        numbers={"한":1,"두":2,"세":3,"네":4,"다섯":5,"여섯":6,"일곱":7,"여덟":8,"아홉":9,"열":10}
-        values={}
-        for number,unit in re.findall(r"(\d+|다섯|여섯|일곱|여덟|아홉|한|두|세|네|열)(개|장|쌍|자루|켤레)",compact(text)):
-            values.setdefault(unit,set()).add(int(number) if number.isdigit() else numbers[number])
-        return values
-    a,b=quantities(expected),quantities(supplied)
-    return any(a[unit]!=b[unit] for unit in a.keys() & b.keys())
+    return number_signature(expected,question)!=number_signature(supplied,question)
 
 
 def compact(text):
@@ -104,6 +156,11 @@ def compact(text):
 def korean_number(text):
     native={"하나":"1","한개":"1","둘":"2","두개":"2","셋":"3","세개":"3","넷":"4","네개":"4","다섯":"5","여섯":"6","일곱":"7","여덟":"8","아홉":"9","열":"10","스물":"20"}
     if text in native:return native[text]
+    if text in NATIVE_ONES:return str(NATIVE_ONES[text])
+    for prefix,amount in NATIVE_TENS.items():
+        if text==prefix:return str(amount)
+        if text.startswith(prefix) and text[len(prefix):] in NATIVE_ONES:
+            return str(amount+NATIVE_ONES[text[len(prefix):]])
     if not text or not re.fullmatch(r"[영공일이삼사오육칠팔구십백천]+",text):return text
     digits={c:i for i,c in enumerate("영일이삼사오육칠팔구")};digits["공"]=0
     if not any(u in text for u in "십백천"):
@@ -116,8 +173,11 @@ def korean_number(text):
 
 
 def facts(text,question=""):
-    value=compact(text).replace("별표시","별")
+    literal=literal_number(text,question)
+    if literal is not None:
+        return {group:set() for group in GROUPS},format(literal.normalize(),"f")
     identity=bool(IDENTITY.search(question))
+    value=compact(text if identity else normalized_counts(text)).replace("별표시","별")
     if identity:
         value=re.sub(r"^(?:이름|성명|이니셜|문구|글자|영문|알파벳|번호|숫자)(?:은|는|이|가)?","",value)
     if not identity:value=MODIFIERS.sub("",value)

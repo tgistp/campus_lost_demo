@@ -17,15 +17,21 @@ function App() {
     const motion=()=>setReduced(mq.matches);
     mq.addEventListener('change',motion);
     send('streamlit:componentReady',{apiVersion:1});
-    const resize=()=>send('streamlit:setFrameHeight',{height:Math.max(620,Math.min(980,window.screen.availHeight-100))});
+    const resize=()=>{
+      let available=window.screen.availHeight-100;
+      try { available=window.parent.innerHeight-(window.frameElement?.getBoundingClientRect().top ?? 32)-2; } catch {}
+      send('streamlit:setFrameHeight',{height:Math.round(Math.max(620,Math.min(980,available)))});
+    };
+    let parentListening=false;
     resize(); window.addEventListener('resize',resize);
-    return ()=>{window.removeEventListener('message',listener);window.removeEventListener('resize',resize);mq.removeEventListener('change',motion)};
+    try { window.parent.addEventListener('resize',resize); parentListening=true; } catch {}
+    return ()=>{window.removeEventListener('message',listener);window.removeEventListener('resize',resize);mq.removeEventListener('change',motion);if(parentListening)window.parent.removeEventListener('resize',resize)};
   },[]);
   return <main>
     <div className="background" aria-hidden="true"><ShapeGrid shape="square" cellSize={64} speed={.12}
       lineColor="#242c27" hoverColor="#1ed760" hoverFillColor="#1ed760" fillOpacity={.12}
       glow={.1} fade={.7} twinkle={0} paused={reduced} intro={!reduced} clickCascade={false}/></div>
-    <header><span className="wordmark">PNU<span className="dot">.</span></span><span>부산대학교<br/>양산캠퍼스 분실물</span></header>
+    <header><span className="wordmark" aria-label="PNU:LINK"><span>PNU</span><span className="brand-colon">:</span><span className="brand-link">LINK</span></span></header>
     <section aria-label="시작하기">
       <div className="actions">
         <SpotlightCard className="action lost" spotlightColor="#1ed760" intensity={.11} borderGlow={.4} ambient={false}>
@@ -44,7 +50,7 @@ function App() {
         </SpotlightCard>
       </div>
     </section>
-    <footer>LOST &amp; FOUND</footer>
+    <footer><span className="footer-line" aria-hidden="true"/><span>부산대학교 양산캠퍼스 분실물</span></footer>
   </main>;
 }
 createRoot(document.getElementById('root')).render(<App/>);

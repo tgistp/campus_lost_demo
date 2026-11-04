@@ -8,7 +8,7 @@ https://github.com/new 에서 저장소 이름을 pnu-yangsan-lost-found 등으�
 시연용으로 공개하려면 Public을 선택하고 Create repository를 누르세요.
 
 2. 전용 파일 올리기
-campus-lost-github-v0.15.zip을 ‘모두 압축 풀기’로 푸세요.
+campus-lost-github-v0.17.zip을 ‘모두 압축 풀기’로 푸세요.
 campus-lost-github 폴더 안의 파일과 폴더를 GitHub 저장소에 올리세요.
 GitHub의 Add file → Upload files를 이용하고, 마지막에 Commit changes를 누르세요.
 ZIP 자체를 올리는 것이 아닙니다! cloud_app.py가 저장소 맨 위에 보여야 합니다.
@@ -32,10 +32,13 @@ Deploy를 누르고 준비가 끝날 때까지 기다리세요.
 
 4. 다음에 수정했을 때
 바뀐 코드를 같은 GitHub 저장소의 같은 브랜치에 올리고 Commit changes를 누르세요.
+이번 ZIP을 풀고 campus-lost-github 폴더 안의 파일·폴더를 기존 저장소의 맨 위에 덮어 올리세요.
+폴더를 한 겹 더 만들지 마세요. cloud_app.py의 위치는 그대로 유지해야 합니다.
+landing/dist의 app.js·app.css·index.html도 함께 갱신해야 PNU:LINK 화면이 바뀝니다.
 연결된 앱이 자동으로 갱신됩니다. 보통 같은 주소를 계속 사용합니다.
 내 컴퓨터에서 파일만 고치고 GitHub에 올리지 않으면 홈페이지는 바뀌지 않습니다.
 
-실제 계정 연결과 Deploy는 아직 완료하지 않았습니다.
+이 ZIP을 받는 것만으로 GitHub나 홈페이지가 바뀌지는 않습니다. 위 순서로 업로드해야 합니다.
 GitHub 전용판은 큰 AI 모델을 첫 실행에 내려받고 무결성을 검사합니다.
 예시 24건은 자동으로 준비됩니다. API 키는 필요 없습니다.
 현재 DB는 시연 서버의 파일에 저장합니다. 서버가 초기화되면 기록이 사라질 수 있습니다.
